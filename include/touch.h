@@ -11,11 +11,9 @@
 
 int touch_last_x = 0, touch_last_y = 0;
 
-#if defined(TOUCH_GT911)
 #include <Wire.h>
 #include <TAMC_GT911.h>
 TAMC_GT911 ts = TAMC_GT911(TOUCH_GT911_SDA, TOUCH_GT911_SCL, TOUCH_GT911_INT, TOUCH_GT911_RST, max(TOUCH_MAP_X1, TOUCH_MAP_X2), max(TOUCH_MAP_Y1, TOUCH_MAP_Y2));
-#endif
 
 void touch_init()
 {
