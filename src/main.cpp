@@ -7,6 +7,10 @@
 #include "LGFX.h"
 LGFX lcd;
 
+// Define screen sizes
+#define LCD_WIDTH 800
+#define LCD_HEIGHT 480
+
 // Setup touch on the screen
 #include "touch.h"
 
@@ -14,9 +18,14 @@ LGFX lcd;
 // LVGL SETUP //
 ////////////////
 
+// Buffer size
+#define BUFFER_SIZE ((LCD_WIDTH * LCD_HEIGHT * 2) / 6)
+
 // LVGL buffer and driver
+#include "esp_heap_caps.h"
+
 static lv_disp_draw_buf_t draw_buf;
-static lv_color_t buf[800 * 80];
+static lv_color_t *buf = (lv_color_t *)heap_caps_aligned_alloc(32, BUFFER_SIZE, MALLOC_CAP_DMA);
 static lv_disp_drv_t disp_drv;
 
 // Display flush function
@@ -60,7 +69,8 @@ void setup()
 
   lv_init();
 
-  lv_disp_draw_buf_init(&draw_buf, buf, NULL, sizeof(buf) / sizeof(lv_color_t));
+  size_t pixel_count = BUFFER_SIZE / sizeof(lv_color_t);
+  lv_disp_draw_buf_init(&draw_buf, buf, NULL, pixel_count);
 
   lv_disp_drv_init(&disp_drv);
   disp_drv.flush_cb = lv_flush_cb;
