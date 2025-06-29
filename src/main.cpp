@@ -16,7 +16,7 @@ LGFX lcd;
 
 // LVGL buffer and driver
 static lv_disp_draw_buf_t draw_buf;
-static lv_color_t buf[800 * 60]; // Partial buffer: 60 lines
+static lv_color_t buf[800 * 80];
 static lv_disp_drv_t disp_drv;
 
 // Display flush function
@@ -77,15 +77,31 @@ void setup()
   indev_drv.read_cb = lv_touch_cb;
   lv_indev_drv_register(&indev_drv);
 
-  // Example UI:
-  lv_obj_t *label = lv_label_create(lv_scr_act());
-  lv_label_set_text(label, "Hello Elecrow!");
-  lv_obj_align(label, LV_ALIGN_CENTER, 0, -40);
+  lv_obj_t *tileview = lv_tileview_create(lv_scr_act());
+  lv_obj_t *page1 = lv_tileview_add_tile(tileview, 0, 0, LV_DIR_RIGHT);
+  lv_obj_t *page2 = lv_tileview_add_tile(tileview, 1, 0, LV_DIR_LEFT | LV_DIR_RIGHT);
 
-  lv_obj_t *btn = lv_btn_create(lv_scr_act());
-  lv_obj_align(btn, LV_ALIGN_CENTER, 0, 40);
-  lv_obj_t *btn_label = lv_label_create(btn);
-  lv_label_set_text(btn_label, "Press me!");
+  // Create a grid on page1
+  static lv_coord_t col_dsc[] = {LV_PCT(33), LV_PCT(33), LV_PCT(33), LV_GRID_TEMPLATE_LAST};
+  static lv_coord_t row_dsc[] = {LV_PCT(50), LV_PCT(50), LV_GRID_TEMPLATE_LAST};
+
+  lv_obj_t *grid = lv_obj_create(page1);
+  lv_obj_set_size(grid, 800, 480);
+  lv_obj_center(grid);
+  lv_obj_set_layout(grid, LV_LAYOUT_GRID);
+  lv_obj_set_grid_dsc_array(grid, col_dsc, row_dsc);
+
+  // Add buttons with icons
+  for (int i = 0; i < 6; i++)
+  {
+    lv_obj_t *btn = lv_btn_create(grid);
+    lv_obj_set_size(btn, 80, 80);
+    lv_obj_set_grid_cell(btn, LV_GRID_ALIGN_CENTER, i % 3, 1, LV_GRID_ALIGN_CENTER, i / 3, 1);
+
+    lv_obj_t *label = lv_label_create(btn);
+    lv_label_set_text_fmt(label, "App %d", i + 1);
+    lv_obj_center(label);
+  }
 }
 
 void loop()
