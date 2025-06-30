@@ -51,6 +51,32 @@ void lv_touch_cb(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
   }
 }
 
+// Grid Setup
+#define GRID_COLS 8
+#define GRID_ROWS 4
+
+// Generate column/row descriptors dynamically
+static lv_coord_t col_dsc[GRID_COLS + 1];
+static lv_coord_t row_dsc[GRID_ROWS + 1];
+
+void setup_grid_dsc(void)
+{
+  lv_coord_t col_pct = 100 / GRID_COLS;
+  lv_coord_t row_pct = 100 / GRID_ROWS;
+
+  for (int i = 0; i < GRID_COLS; i++)
+  {
+    col_dsc[i] = LV_PCT(col_pct);
+  }
+  col_dsc[GRID_COLS] = LV_GRID_TEMPLATE_LAST;
+
+  for (int i = 0; i < GRID_ROWS; i++)
+  {
+    row_dsc[i] = LV_PCT(row_pct);
+  }
+  row_dsc[GRID_ROWS] = LV_GRID_TEMPLATE_LAST;
+}
+
 ////////////////////
 // Setup and Loop //
 ////////////////////
@@ -75,8 +101,8 @@ void setup()
   lv_disp_drv_init(&disp_drv);
   disp_drv.flush_cb = lv_flush_cb;
   disp_drv.draw_buf = &draw_buf;
-  disp_drv.hor_res = 800;
-  disp_drv.ver_res = 480;
+  disp_drv.hor_res = LCD_WIDTH;
+  disp_drv.ver_res = LCD_HEIGHT;
   lv_disp_drv_register(&disp_drv);
 
   touch_init();
@@ -92,21 +118,19 @@ void setup()
   lv_obj_t *page2 = lv_tileview_add_tile(tileview, 1, 0, LV_DIR_LEFT | LV_DIR_RIGHT);
 
   // Create a grid on page1
-  static lv_coord_t col_dsc[] = {LV_PCT(33), LV_PCT(33), LV_PCT(33), LV_GRID_TEMPLATE_LAST};
-  static lv_coord_t row_dsc[] = {LV_PCT(50), LV_PCT(50), LV_GRID_TEMPLATE_LAST};
-
+  setup_grid_dsc();
   lv_obj_t *grid = lv_obj_create(page1);
-  lv_obj_set_size(grid, 800, 480);
+  lv_obj_set_size(grid, LCD_WIDTH, LCD_HEIGHT);
   lv_obj_center(grid);
   lv_obj_set_layout(grid, LV_LAYOUT_GRID);
   lv_obj_set_grid_dsc_array(grid, col_dsc, row_dsc);
 
   // Add buttons with icons
-  for (int i = 0; i < 6; i++)
+  for (int i = 0; i < (GRID_COLS * GRID_ROWS); i++)
   {
     lv_obj_t *btn = lv_btn_create(grid);
     lv_obj_set_size(btn, 80, 80);
-    lv_obj_set_grid_cell(btn, LV_GRID_ALIGN_CENTER, i % 3, 1, LV_GRID_ALIGN_CENTER, i / 3, 1);
+    lv_obj_set_grid_cell(btn, LV_GRID_ALIGN_CENTER, i % GRID_COLS, 1, LV_GRID_ALIGN_CENTER, i / GRID_COLS, 1);
 
     lv_obj_t *label = lv_label_create(btn);
     lv_label_set_text_fmt(label, "App %d", i + 1);
