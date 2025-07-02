@@ -1,13 +1,13 @@
-#include "lvgl_setup.h"
-#include "config.h"
-#include "esp_heap_caps.h"
-#include "lcd_shared.h"
-#include "touch.h"
 #include <lvgl.h>
+#include "config.h"
+#include "lvgl_setup.h"
+#include "touch.h"
+#include "lcd_shared.h"
+#include "esp_heap_caps.h"
 
-static lv_disp_draw_buf_t draw_buf;
-static lv_color_t *buf = (lv_color_t *)heap_caps_aligned_alloc(32, BUFFER_SIZE, MALLOC_CAP_DMA);
-static lv_disp_drv_t disp_drv;
+lv_disp_draw_buf_t draw_buf;
+lv_color_t *buf = (lv_color_t *)heap_caps_aligned_alloc(32, BUFFER_SIZE, MALLOC_CAP_DMA);
+lv_disp_drv_t disp_drv;
 
 // Display flush
 void lv_flush_cb(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p)
