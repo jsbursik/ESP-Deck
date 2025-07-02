@@ -1,10 +1,16 @@
 #include <lvgl.h>
+#include "config.h"
 
 // Setup LoyvanGFX for the Elecrow Display
 #include "LGFX.h"
+#include "lcd_shared.h"
 
 // Setup LVGL
-#include "lvgl_setup.cpp"
+#include "lvgl_setup.h"
+#include "touch.h"
+
+// Styling baby
+#include "styling.h"
 
 ////////////////////
 // Setup and Loop //
@@ -22,6 +28,10 @@ void setup()
 
   // LVGL init
   lv_init();
+
+  // LVGL style init
+  grid_style_init();
+  btn_style_init();
 
   // Buffer setup
   size_t pixel_count = BUFFER_SIZE / sizeof(lv_color_t);
@@ -48,6 +58,7 @@ void setup()
   // Create a grid on the active screen
   setup_grid_dsc();
   lv_obj_t *grid = lv_obj_create(lv_scr_act());
+  lv_obj_add_style(grid, &grid_style, 0);
   lv_obj_set_size(grid, LCD_WIDTH, LCD_HEIGHT);
   lv_obj_center(grid);
   lv_obj_set_layout(grid, LV_LAYOUT_GRID);
@@ -59,10 +70,12 @@ void setup()
     lv_obj_t *btn = lv_btn_create(grid);
     lv_obj_set_size(btn, 80, 80);
     lv_obj_set_grid_cell(btn, LV_GRID_ALIGN_CENTER, i % GRID_COLS, 1, LV_GRID_ALIGN_CENTER, i / GRID_COLS, 1);
+    lv_obj_add_style(btn, &btn_style, 0);
 
     lv_obj_t *label = lv_label_create(btn);
     lv_label_set_text_fmt(label, "App %d", i + 1);
     lv_obj_center(label);
+    lv_obj_set_style_text_color(label, lv_color_hex(0xFFFFFF), 0);
   }
 }
 
