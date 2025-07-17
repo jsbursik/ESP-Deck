@@ -1,8 +1,8 @@
 #include <lvgl.h>
-#include "config.h"
-#include "lvgl_setup.h"
-#include "touch.h"
-#include "lcd_shared.h"
+#include "core/config.h"
+#include "display/lvgl_setup.h"
+#include "display/touch.h"
+#include "core/lcd_shared.h"
 #include "esp_heap_caps.h"
 
 lv_disp_draw_buf_t draw_buf;

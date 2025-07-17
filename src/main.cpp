@@ -1,16 +1,16 @@
 #include <lvgl.h>
-#include "config.h"
+#include "core/config.h"
 
 // Setup LoyvanGFX for the Elecrow Display
-#include "LGFX.h"
-#include "lcd_shared.h"
+#include "display/LGFX.h"
+#include "core/lcd_shared.h"
 
 // Setup LVGL
-#include "lvgl_setup.h"
-#include "touch.h"
+#include "display/lvgl_setup.h"
+#include "display/touch.h"
 
 // Styling baby
-#include "styling.h"
+#include "display/styling.h"
 
 ////////////////////
 // Setup and Loop //

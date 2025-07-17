@@ -1,5 +1,5 @@
-#include "touch.h"
-#include "lcd_shared.h"
+#include "display/touch.h"
+#include "core/lcd_shared.h"
 #include <Wire.h>
 #include <TAMC_GT911.h>
 

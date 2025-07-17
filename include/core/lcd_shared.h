@@ -1,4 +1,4 @@
 #pragma once
-#include "LGFX.h"
+#include "display/LGFX.h"
 
 extern LGFX lcd;
